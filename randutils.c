@@ -11,9 +11,14 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/time.h>
 
+#if defined(HAVE_SYS_TIME_H)
+#include <sys/time.h>
+#endif
+
+#if defined(__linux__) && defined(HAVE_SYS_SYSCALL_H)
 #include <sys/syscall.h>
+#endif
 
 #include "randutils.h"
 
