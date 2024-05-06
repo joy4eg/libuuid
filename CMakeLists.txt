@@ -6,7 +6,7 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_EXTENSIONS ON)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-set(LIBUUID_VERSION "1.0.3")
+set(LIBUUID_VERSION "1.0.4")
 
 option(BUILD_LIBRARY_SHARED "Build shared library" ON)
 option(BUILD_LIBRARY_STATIC "Build static library" OFF)
