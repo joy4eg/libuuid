@@ -1,6 +1,15 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.10)
 
 project(uuid C)
+
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_EXTENSIONS ON)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+
+set(LIBUUID_VERSION "1.0.3")
+
+option(BUILD_LIBRARY_SHARED "Build shared library" ON)
+option(BUILD_LIBRARY_STATIC "Build static library" OFF)
 
 set(SOURCE_FILES
     clear.c
@@ -17,8 +26,13 @@ set(SOURCE_FILES
     uuid_time.c
 )
 
-add_library(uuid ${SOURCE_FILES})
+MESSAGE(STATUS "Build shared library:          " ${BUILD_LIBRARY_SHARED})
+MESSAGE(STATUS "Build static library:          " ${BUILD_LIBRARY_STATIC})
 
+add_library(uuid OBJECT ${SOURCE_FILES})
+set_target_properties(uuid PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+include(GNUInstallDirs)
 include(CheckIncludeFile)
 
 check_include_file(fcntl.h HAVE_FCNTL_H)
@@ -150,3 +164,29 @@ target_include_directories(uuid INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<INSTALL_INTERFACE:.>
 )
+
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/uuid.pc.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/uuid.pc"
+    @ONLY
+)
+
+
+# Shared lib
+if (BUILD_LIBRARY_SHARED)
+    add_library(uuid_shared SHARED $<TARGET_OBJECTS:uuid>)
+    set_target_properties(uuid_shared PROPERTIES OUTPUT_NAME uuid)
+    install(TARGETS uuid_shared LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+endif()
+
+# Static lib
+if (BUILD_LIBRARY_STATIC)
+    add_library(uuid_static STATIC $<TARGET_OBJECTS:uuid>)
+    set_target_properties(uuid_static PROPERTIES OUTPUT_NAME uuid)
+    install(TARGETS uuid_static LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+endif()
+
+if (BUILD_LIBRARY_STATIC OR BUILD_LIBRARY_SHARED)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/uuid.pc   DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
+    install(FILES ${CMAKE_SOURCE_DIR}/uuid.h            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+endif()
