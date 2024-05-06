@@ -139,6 +139,7 @@ CheckAll(
     HAVE_UINT8_T
 )
 
+target_compile_definitions(uuid PRIVATE _DEFAULT_SOURCE=1)
 target_compile_definitions(uuid PRIVATE
     ${ExistHeaderList}
     ${ExistFunctionList}
