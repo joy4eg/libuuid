@@ -30,6 +30,7 @@ check_include_file(string.h HAVE_STRING_H)
 check_include_file(sys/file.h HAVE_SYS_FILE_H)
 check_include_file(sys/ioctl.h HAVE_SYS_IOCTL_H)
 check_include_file(sys/socket.h HAVE_SYS_SOCKET_H)
+check_include_file(sys/syscall.h HAVE_SYS_SYSCALL_H)
 check_include_file(sys/time.h HAVE_SYS_TIME_H)
 check_include_file(unistd.h HAVE_UNISTD_H)
 
@@ -108,6 +109,7 @@ RemoveNotSetVarList(ExistHeaderList
     HAVE_SYS_FILE_H
     HAVE_SYS_IOCTL_H
     HAVE_SYS_SOCKET_H
+    HAVE_SYS_SYSCALL_H
     HAVE_SYS_TIME_H
     HAVE_UNISTD_H
 )
