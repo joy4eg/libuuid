@@ -143,7 +143,7 @@ static int flock(int fd, int op)
 
 #endif /* LOCK_EX */
 
-#ifdef _WIN32
+#ifndef HAVE_GETTIMEOFDAY
 static void gettimeofday(struct timeval *tv, void *dummy)
 {
 	FILETIME ftime;
@@ -158,11 +158,6 @@ static void gettimeofday(struct timeval *tv, void *dummy)
 
 	tv->tv_sec = n / 1000000;
 	tv->tv_usec = n % 1000000;
-}
-
-static int getuid(void)
-{
-	return 1;
 }
 #endif
 

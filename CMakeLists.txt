@@ -98,7 +98,7 @@ check_type_size(uint8_t UINT8_T)
 function(RemoveNotSetVarList listName)
     set(list)
     foreach(var ${ARGN})
-        if(var)
+        if(${var})
             list(APPEND list ${var})
         endif()
     endforeach(var)
@@ -161,8 +161,8 @@ target_compile_definitions(uuid PRIVATE
 )
 
 target_include_directories(uuid INTERFACE
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:.>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:.>
 )
 
 configure_file(
@@ -170,7 +170,6 @@ configure_file(
     "${CMAKE_CURRENT_BINARY_DIR}/uuid.pc"
     @ONLY
 )
-
 
 # Shared lib
 if (BUILD_LIBRARY_SHARED)
