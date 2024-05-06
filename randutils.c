@@ -36,7 +36,7 @@ THREAD_LOCAL unsigned short ul_jrand_seed[3];
 int random_get_fd(void)
 {
 	int i, fd;
-	struct timeval	tv;
+	struct timeval tv;
 
 	gettimeofday(&tv, 0);
 	fd = open("/dev/urandom", O_RDONLY);
@@ -61,7 +61,6 @@ int random_get_fd(void)
 	return fd;
 }
 
-
 /*
  * Generate a stream of random nbytes into buf.
  * Use /dev/urandom if possible, and if not,
@@ -72,7 +71,7 @@ void random_get_bytes(void *buf, size_t nbytes)
 	size_t i, n = nbytes;
 	int fd = random_get_fd();
 	int lose_counter = 0;
-	unsigned char *cp = (unsigned char *) buf;
+	unsigned char *cp = (unsigned char *)buf;
 
 	if (fd >= 0) {
 		while (n > 0) {
@@ -105,8 +104,7 @@ void random_get_bytes(void *buf, size_t nbytes)
 		ul_jrand_seed[2] = ul_jrand_seed[2] ^ syscall(__NR_gettid);
 		for (cp = buf, i = 0; i < nbytes; i++)
 			*cp++ ^= (jrand48(tmp_seed) >> 7) & 0xFF;
-		memcpy(ul_jrand_seed, tmp_seed,
-		       sizeof(ul_jrand_seed)-sizeof(unsigned short));
+		memcpy(ul_jrand_seed, tmp_seed, sizeof(ul_jrand_seed) - sizeof(unsigned short));
 	}
 #endif
 
@@ -114,8 +112,7 @@ void random_get_bytes(void *buf, size_t nbytes)
 }
 
 #ifdef TEST_PROGRAM
-int main(int argc __attribute__ ((__unused__)),
-         char *argv[] __attribute__ ((__unused__)))
+int main(int argc __attribute__((__unused__)), char *argv[] __attribute__((__unused__)))
 {
 	unsigned int v, i;
 

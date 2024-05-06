@@ -37,11 +37,13 @@
 #include "uuidP.h"
 #include <string.h>
 
-#define UUCMP(u1,u2) if (u1 != u2) return((u1 < u2) ? -1 : 1);
+#define UUCMP(u1, u2)                                                                                                  \
+	if (u1 != u2)                                                                                                  \
+		return ((u1 < u2) ? -1 : 1);
 
 int uuid_compare(const uuid_t uu1, const uuid_t uu2)
 {
-	struct uuid	uuid1, uuid2;
+	struct uuid uuid1, uuid2;
 
 	uuid_unpack(uu1, &uuid1);
 	uuid_unpack(uu2, &uuid2);
@@ -52,4 +54,3 @@ int uuid_compare(const uuid_t uu1, const uuid_t uu2)
 	UUCMP(uuid1.clock_seq, uuid2.clock_seq);
 	return memcmp(uuid1.node, uuid2.node, 6);
 }
-

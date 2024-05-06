@@ -55,17 +55,17 @@
 
 time_t uuid_time(const uuid_t uu, struct timeval *ret_tv)
 {
-	struct timeval		tv;
-	struct uuid		uuid;
-	uint32_t		high;
-	uint64_t		clock_reg;
+	struct timeval tv;
+	struct uuid uuid;
+	uint32_t high;
+	uint64_t clock_reg;
 
 	uuid_unpack(uu, &uuid);
 
 	high = uuid.time_mid | ((uuid.time_hi_and_version & 0xFFF) << 16);
-	clock_reg = uuid.time_low | ((uint64_t) high << 32);
+	clock_reg = uuid.time_low | ((uint64_t)high << 32);
 
-	clock_reg -= (((uint64_t) 0x01B21DD2) << 32) + 0x13814000;
+	clock_reg -= (((uint64_t)0x01B21DD2) << 32) + 0x13814000;
 	tv.tv_sec = clock_reg / 10000000;
 	tv.tv_usec = (clock_reg % 10000000) / 10;
 
@@ -77,7 +77,7 @@ time_t uuid_time(const uuid_t uu, struct timeval *ret_tv)
 
 int uuid_type(const uuid_t uu)
 {
-	struct uuid		uuid;
+	struct uuid uuid;
 
 	uuid_unpack(uu, &uuid);
 	return ((uuid.time_hi_and_version >> 12) & 0xF);
@@ -85,8 +85,8 @@ int uuid_type(const uuid_t uu)
 
 int uuid_variant(const uuid_t uu)
 {
-	struct uuid		uuid;
-	int			var;
+	struct uuid uuid;
+	int var;
 
 	uuid_unpack(uu, &uuid);
 	var = uuid.clock_seq;
@@ -115,14 +115,12 @@ static const char *variant_string(int variant)
 	}
 }
 
-
-int
-main(int argc, char **argv)
+int main(int argc, char **argv)
 {
-	uuid_t		buf;
-	time_t		time_reg;
-	struct timeval	tv;
-	int		type, variant;
+	uuid_t buf;
+	time_t time_reg;
+	struct timeval tv;
+	int type, variant;
 
 	if (argc != 2) {
 		fprintf(stderr, "Usage: %s uuid\n", argv[0]);
@@ -163,8 +161,7 @@ main(int argc, char **argv)
 		printf("Warning: not a time-based UUID, so UUID time "
 		       "decoding will likely not work!\n");
 	}
-	printf("UUID time is: (%ld, %ld): %s\n", tv.tv_sec, tv.tv_usec,
-	       ctime(&time_reg));
+	printf("UUID time is: (%ld, %ld): %s\n", tv.tv_sec, tv.tv_usec, ctime(&time_reg));
 
 	return 0;
 }
