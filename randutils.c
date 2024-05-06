@@ -9,8 +9,13 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+
+#if defined(HAVE_SYS_RANDOM_H)
+#include <sys/random.h>
+#endif
 
 #if defined(HAVE_SYS_TIME_H)
 #include <sys/time.h>
@@ -33,9 +38,21 @@
 THREAD_LOCAL unsigned short ul_jrand_seed[3];
 #endif
 
-
 void random_get_bytes(void *buf, size_t nbytes)
 {
+#if defined(HAVE_SYS_RANDOM_H) && defined(HAVE_GETRANDOM)
+	size_t n = 0;
+
+	while (n != nbytes) {
+		ssize_t r = getrandom((char *)buf + n, nbytes - n, 0);
+		if (r < 0) {
+			if (errno == EINTR || errno == EAGAIN)
+				continue;
+			break;
+		}
+		n += r;
+	}
+#else
 	size_t i, n = nbytes;
 	int lose_counter = 0;
 	unsigned char *cp = (unsigned char *)buf;
@@ -54,7 +71,7 @@ void random_get_bytes(void *buf, size_t nbytes)
 		memcpy(ul_jrand_seed, tmp_seed, sizeof(ul_jrand_seed) - sizeof(unsigned short));
 	}
 #endif
-
+#endif
 	return;
 }
 
