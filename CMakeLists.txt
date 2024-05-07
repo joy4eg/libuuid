@@ -8,8 +8,9 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 
 set(LIBUUID_VERSION "1.0.4")
 
-option(BUILD_LIBRARY_SHARED "Build shared library" ON)
-option(BUILD_LIBRARY_STATIC "Build static library" OFF)
+option(UUID_BUILD_LIBRARY_SHARED "Build shared library"   ON)
+option(UUID_BUILD_LIBRARY_STATIC "Build static library"   OFF)
+option(UUID_BUILD_TEST           "Build test application" ON)
 
 set(SOURCE_FILES
     clear.c
@@ -20,14 +21,14 @@ set(SOURCE_FILES
     pack.c
     parse.c
     randutils.c
-    test_uuid.c
     unpack.c
     unparse.c
     uuid_time.c
 )
 
-MESSAGE(STATUS "Build shared library:          " ${BUILD_LIBRARY_SHARED})
-MESSAGE(STATUS "Build static library:          " ${BUILD_LIBRARY_STATIC})
+MESSAGE(STATUS "Build shared library:          " ${UUID_BUILD_LIBRARY_SHARED})
+MESSAGE(STATUS "Build static library:          " ${UUID_BUILD_LIBRARY_STATIC})
+MESSAGE(STATUS "Build test app:                " ${UUID_BUILD_TEST})
 
 add_library(uuid OBJECT ${SOURCE_FILES})
 set_target_properties(uuid PROPERTIES POSITION_INDEPENDENT_CODE ON)
@@ -176,20 +177,26 @@ configure_file(
 )
 
 # Shared lib
-if (BUILD_LIBRARY_SHARED)
+if (UUID_BUILD_LIBRARY_SHARED)
     add_library(uuid_shared SHARED $<TARGET_OBJECTS:uuid>)
     set_target_properties(uuid_shared PROPERTIES OUTPUT_NAME uuid)
     install(TARGETS uuid_shared LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 endif()
 
 # Static lib
-if (BUILD_LIBRARY_STATIC)
+if (UUID_BUILD_LIBRARY_STATIC)
     add_library(uuid_static STATIC $<TARGET_OBJECTS:uuid>)
     set_target_properties(uuid_static PROPERTIES OUTPUT_NAME uuid)
     install(TARGETS uuid_static LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 endif()
 
-if (BUILD_LIBRARY_STATIC OR BUILD_LIBRARY_SHARED)
+if (UUID_BUILD_TEST)
+    add_executable(uuid_bin test_uuid.c)
+    target_link_libraries(uuid_bin uuid)
+    set_target_properties(uuid_bin PROPERTIES OUTPUT_NAME uuidtest)
+endif()
+
+if (UUID_BUILD_LIBRARY_STATIC OR UUID_BUILD_LIBRARY_SHARED)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/uuid.pc   DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
     install(FILES ${CMAKE_SOURCE_DIR}/uuid.h            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 endif()
