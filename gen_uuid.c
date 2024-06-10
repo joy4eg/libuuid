@@ -420,13 +420,13 @@ fail:
 }
 
 #else /* !defined(HAVE_UUIDD) && defined(HAVE_SYS_UN_H) */
-static int get_uuid_via_daemon(int op, uuid_t out, int *num)
+static int get_uuid_via_daemon(int op, libuuid_t out, int *num)
 {
 	return -1;
 }
 #endif
 
-int __uuid_generate_time(uuid_t out, int *num)
+int __uuid_generate_time(libuuid_t out, int *num)
 {
 	static unsigned char node_id[6];
 	static int has_init = 0;
@@ -463,7 +463,7 @@ int __uuid_generate_time(uuid_t out, int *num)
  * If neither of these is possible (e.g. because of insufficient permissions), it generates
  * the UUID anyway, but returns -1. Otherwise, returns 0.
  */
-static int uuid_generate_time_generic(uuid_t out)
+static int uuid_generate_time_generic(libuuid_t out)
 {
 #ifdef HAVE_TLS
 	THREAD_LOCAL int num = 0;
@@ -510,19 +510,19 @@ static int uuid_generate_time_generic(uuid_t out)
  *
  * Discards return value from uuid_generate_time_generic()
  */
-void uuid_generate_time(uuid_t out)
+void uuid_generate_time(libuuid_t out)
 {
 	(void)uuid_generate_time_generic(out);
 }
 
-int uuid_generate_time_safe(uuid_t out)
+int uuid_generate_time_safe(libuuid_t out)
 {
 	return uuid_generate_time_generic(out);
 }
 
-void __uuid_generate_random(uuid_t out, int *num)
+void __uuid_generate_random(libuuid_t out, int *num)
 {
-	uuid_t buf;
+	libuuid_t buf;
 	struct uuid uu;
 	int i, n;
 
@@ -538,11 +538,11 @@ void __uuid_generate_random(uuid_t out, int *num)
 		uu.clock_seq = (uu.clock_seq & 0x3FFF) | 0x8000;
 		uu.time_hi_and_version = (uu.time_hi_and_version & 0x0FFF) | 0x4000;
 		uuid_pack(&uu, out);
-		out += sizeof(uuid_t);
+		out += sizeof(libuuid_t);
 	}
 }
 
-void uuid_generate_random(uuid_t out)
+void uuid_generate_random(libuuid_t out)
 {
 	int num = 1;
 	/* No real reason to use the daemon for random uuid's -- yet */
@@ -567,7 +567,7 @@ static int have_random_source(void)
  * /dev/urandom is available, since otherwise we won't have
  * high-quality randomness.
  */
-void uuid_generate(uuid_t out)
+void uuid_generate(libuuid_t out)
 {
 	if (have_random_source())
 		uuid_generate_random(out);

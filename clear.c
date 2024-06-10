@@ -36,7 +36,7 @@
 
 #include "uuidP.h"
 
-void uuid_clear(uuid_t uu)
+void uuid_clear(libuuid_t uu)
 {
 	memset(uu, 0, 16);
 }

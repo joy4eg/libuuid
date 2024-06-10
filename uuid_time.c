@@ -53,7 +53,7 @@
 
 #include "uuidP.h"
 
-time_t uuid_time(const uuid_t uu, struct timeval *ret_tv)
+time_t uuid_time(const libuuid_t uu, struct timeval *ret_tv)
 {
 	struct timeval tv;
 	struct uuid uuid;
@@ -75,7 +75,7 @@ time_t uuid_time(const uuid_t uu, struct timeval *ret_tv)
 	return tv.tv_sec;
 }
 
-int uuid_type(const uuid_t uu)
+int uuid_type(const libuuid_t uu)
 {
 	struct uuid uuid;
 
@@ -83,7 +83,7 @@ int uuid_type(const uuid_t uu)
 	return ((uuid.time_hi_and_version >> 12) & 0xF);
 }
 
-int uuid_variant(const uuid_t uu)
+int uuid_variant(const libuuid_t uu)
 {
 	struct uuid uuid;
 	int var;

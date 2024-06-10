@@ -46,7 +46,7 @@
 static int test_uuid(const char *uuid, int isValid)
 {
 	static const char *validStr[2] = { "invalid", "valid" };
-	uuid_t uuidBits;
+	libuuid_t uuidBits;
 	int parsedOk;
 
 	parsedOk = uuid_parse(uuid, uuidBits) == 0;
@@ -68,7 +68,7 @@ static int test_uuid(const char *uuid, int isValid)
 
 int main(int argc ATTR((unused)), char **argv ATTR((unused)))
 {
-	uuid_t buf, tst;
+	libuuid_t buf, tst;
 	char str[100];
 	struct timeval tv;
 	time_t time_reg;
